@@ -1,20 +1,13 @@
 import { App, Plugin } from 'vue';
-import VPluginTemplates from './plugin';
+import { VDateField } from './plugin';
 import './plugin/styles/main.scss';
 
 const install = (app: App) => {
-	for (const prop in VPluginTemplates) {
-		const component = VPluginTemplates[prop];
-		app.component(component.name, component);
-	}
+	app.component('VDateField', VDateField);
 };
 
-for (const prop in VPluginTemplates) {
-	const component = VPluginTemplates[prop];
-	component.install = install;
-}
+VDateField.install = install;
 
-export const VPluginTemplate = VPluginTemplates.VPluginTemplate;
+export default VDateField as unknown as Plugin;
 
-export default { VPluginTemplates } as unknown as Plugin;
-
+export { VDateField };

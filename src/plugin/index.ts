@@ -1,5 +1,7 @@
-import VPluginTemplate from './VPluginTemplate.vue';
+import VDateField from './VDateField.vue';
 
-export default {
-	VPluginTemplate
+export {
+	VDateField
 };
+
+export default VDateField;

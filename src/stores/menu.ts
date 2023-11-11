@@ -6,7 +6,40 @@ export const useMenuStore = defineStore('menu', () => {
 	const coreStore = useCoreStore();
 	const links = coreStore.links;
 
-	console.log(links.vuetifyGithub);
+	const componentItems = [
+		{
+			href: '#components-v-text-field',
+			icon: 'mdi:mdi-minus',
+			key: 'v-inline-text-field',
+			link: `${links.vuetify}en/api/v-text-field/`,
+			title: 'VInlineTextField',
+			topTitle: 'VTextField',
+		},
+		{
+			href: '#components-v-date-picker',
+			icon: 'mdi:mdi-calendar',
+			key: 'v-inline-text-field',
+			link: `${links.vuetify}en/api/v-date-picker/`,
+			title: 'VDatePicker',
+			topTitle: 'VDatePicker',
+		},
+		{
+			href: '#components-v-card',
+			icon: 'mdi:mdi-card-outline',
+			key: 'v-inline-text-field',
+			link: `${links.vuetify}en/api/v-card/`,
+			title: 'VCard',
+			topTitle: 'VCard',
+		},
+		{
+			href: '#components-v-icon',
+			icon: '$vuetify',
+			key: 'v-icon',
+			link: `${links.vuetify}en/api/v-icon/`,
+			title: 'VIcon',
+			topTitle: 'VIcon',
+		},
+	];
 
 	const vuetifyLinks = [
 		{
@@ -91,6 +124,7 @@ export const useMenuStore = defineStore('menu', () => {
 	];
 
 	return {
+		componentItems,
 		menuItems,
 		vuetifyLinks,
 	};

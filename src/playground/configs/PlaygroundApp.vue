@@ -9,7 +9,7 @@
 				<v-container class="px-10">
 					<v-row>
 						<v-col class="v-col-12 text-center">
-							<h1>Vuetify Plugin Template</h1>
+							<h1>Vuetify Date Field</h1>
 						</v-col>
 						<v-col class="v-col-12 text-center">
 							<v-chip color="primary">
