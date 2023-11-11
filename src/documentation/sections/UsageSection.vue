@@ -70,8 +70,8 @@ app.mount('#app');`;
 const usageIndividual = `import { createApp } from 'vue';
 import App from './App.vue';
 import {
-  VPluginTemplate
-} from 'vuetify-plugin-template';
+  VDateField
+} from '@wdns/vuetify-date-field';
 
 const app = createApp(App);
 

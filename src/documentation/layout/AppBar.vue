@@ -121,7 +121,7 @@ const links = store.links;
 const themeName = ref('dark');
 const drawer = ref(true);
 
-const menuItems = [...menuStore.vuetifyLinks];
+const menuItems = [...menuStore.vuetifyLinks, ...menuStore.componentItems];
 
 const iconSize = ref({
 	height: 32,

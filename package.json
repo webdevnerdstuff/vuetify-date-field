@@ -1,10 +1,13 @@
 {
-	"name": "vuetify-plugin-template",
-	"version": "1.0.0",
-	"description": "Vuetify Plugin Template is a template to help you get starting building your own plugin/component for Vuetify.",
+	"name": "@wdns/vuetify-date-field",
+	"version": "1.0.0-alpha-1",
+	"description": "TBD",
 	"private": false,
-	"main": "dist/vuetify-plugin-template.cjs.js",
-	"module": "dist/vuetify-plugin-template.es.js",
+	"publishConfig": {
+		"access": "public"
+	},
+	"main": "dist/vuetify-date-field.cjs.js",
+	"module": "dist/vuetify-date-field.es.js",
 	"types": "dist/types/index.d.ts",
 	"scripts": {
 		"dev": "vite",
@@ -31,13 +34,13 @@
 		"LICENSE.md",
 		"README.md"
 	],
-	"repository": "https://github.com/webdevnerdstuff/vuetify-plugin-template",
+	"repository": "https://github.com/webdevnerdstuff/vuetify-date-field",
 	"bugs": {
-		"url": "https://github.com/webdevnerdstuff/vuetify-plugin-template/issues"
+		"url": "https://github.com/webdevnerdstuff/vuetify-date-field/issues"
 	},
-	"homepage": "https://webdevnerdstuff.github.io/vuetify-plugin-template/",
+	"homepage": "https://webdevnerdstuff.github.io/vuetify-date-field/",
 	"keywords": [
-		"vuetify-plugin-template",
+		"vuetify-date-field",
 		"vuetify",
 		"vue",
 		"vue3",
@@ -49,6 +52,7 @@
 		"wdns"
 	],
 	"dependencies": {
+		"@vueuse/core": "^10.6.0",
 		"vue": "^3.3.8",
 		"vuetify": "^3.4.0"
 	},
@@ -80,7 +84,6 @@
 		"gh-pages": "^6.0.0",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.0.2",
-		"miragejs": "^0.1.48",
 		"pinia": "^2.1.7",
 		"postcss": "^8.4.31",
 		"postcss-html": "^1.5.0",
