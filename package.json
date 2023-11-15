@@ -54,7 +54,7 @@
 	"dependencies": {
 		"@vueuse/core": "^10.6.1",
 		"vue": "^3.3.8",
-		"vuetify": "^3.4.0"
+		"vuetify": "^3.4.1"
 	},
 	"devDependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -76,6 +76,7 @@
 		"@vue/eslint-config-typescript": "^12.0.0",
 		"@wdns/vue-code-block": "^2.2.15",
 		"autoprefixer": "^10.4.16",
+		"dayjs": "^1.11.10",
 		"eslint": "^8.53.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-import": "^2.29.0",

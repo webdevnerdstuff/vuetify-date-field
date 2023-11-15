@@ -12,7 +12,7 @@
 			:density="density"
 			:hint="hint"
 			:messages="messages"
-			:model-value="modelValue"
+			:model-value="textFieldModelValue"
 			:persistent-hint="persistentHint"
 			:persistent-placeholder="persistentPlaceholder"
 			:placeholder="placeholder"
@@ -21,7 +21,7 @@
 			@click:clear="toggleDatePicker('clear')"
 			@click:control="toggleCheck('textField')"
 			@keyup.enter="toggleDatePicker('keyup')"
-			@update:model-value="updateModelValue"
+			@update:model-value="updateModelValue($event, 'textField')"
 		>
 			<!-- ========================= Pass Slots -->
 			<template
@@ -179,9 +179,10 @@
 			>
 				<!-- Date Picker -->
 				<v-date-picker
-					v-model="datePickerModelValue"
 					:input-mode="datePickerProps.inputMode"
-					@update:model-value="updateModelValue"
+					:model-value="datePickerModelValue"
+					:month="pickerMonth"
+					@update:model-value="updateModelValue($event, 'datePicker')"
 				></v-date-picker>
 			</v-card>
 		</v-defaults-provider>
@@ -204,7 +205,17 @@ import {
 import DatePickerIcon from '@/plugin/components/DatePickerIcon.vue';
 import type { VCard } from 'vuetify/components';
 import { onClickOutside } from '@vueuse/core';
+// import { VDatePicker } from 'vuetify/components';
+// import { useDate } from 'vuetify';
+// import { format as _Format } from 'date-fns';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
+dayjs.extend(customParseFormat);
+
+console.log('dayjs', dayjs);
+
+// console.log('VDatePicker', VDatePicker);
 
 defineOptions({
 	inheritAttrs: false,
@@ -268,7 +279,7 @@ const defaultDatePickerProps: Props['datePickerProps'] = {
 	calendarIcon: '$calendar', 							// Pass
 	color: undefined, 											// Pass
 	// ! https://github.com/vuetifyjs/vuetify/issues/18650
-	disabled: true, 												// !! Fail: Not working?
+	disabled: false, 												// Pass
 	elevation: 0, 													// * Pass: Keep this value
 	header: '$vuetify.datePicker.header',		// Pass
 	height: undefined, 											// Pass
@@ -294,7 +305,7 @@ const defaultDatePickerProps: Props['datePickerProps'] = {
 	position: undefined,										// !! Fail: Not sure what this does or works - Not implemented?
 	prevIcon: '$prev',											// Pass
 	rounded: false,													// !! Fail: Not sure what this does or works - Not implemented?
-	showAdjacentMonths: false,							// Pass
+	showAdjacentMonths: props.showAdjacentMonths ?? false,							// Pass
 	showWeek: false,												// Pass
 	tag: 'div',															// Pass
 	text: undefined,												// !! Fail: Not sure what this does or works
@@ -305,7 +316,7 @@ const defaultDatePickerProps: Props['datePickerProps'] = {
 	year: undefined,												// Pass
 };
 
-const { datePickerProps } = toRefs(props);
+const { datePickerProps, format } = toRefs(props);
 
 const defaults = ref<VuetifyDefaults>({
 	VCard: {
@@ -315,21 +326,25 @@ const defaults = ref<VuetifyDefaults>({
 	VDatePicker: {
 		...defaultDatePickerProps,
 		...{
+			// showAdjacentMonths: props.showAdjacentMonths,
 		},
 		...datePickerProps.value,
 	},
 });
 
-
+console.log('defaults', defaults);
 
 
 // -------------------------------------------------- Data #
 const cardRef = ref<VCard | null>(null);
 const cardStyles = ref<CardStylesObject>({});
-const datePickerModelValue = ref<any>(attrs.modelValue);
+// const date = useDate();
+const textFieldModelValue = ref<any>(attrs.modelValue);
+const datePickerModelValue = ref<any>(undefined);
 const datePickerOpen = ref<boolean>(false);
 const fieldContainerRef = ref<HtmlRefElement>(null);
-const modelValue = ref<any>(attrs.modelValue);
+const pickerMonth = ref<number>(0);
+// const modelValue = ref<any>(attrs.modelValue);
 const themeAll = ref(props.theme ?? undefined);
 let textFieldProperties = reactive<TextFieldProperties>({
 	bottom: 0,
@@ -340,11 +355,26 @@ let textFieldProperties = reactive<TextFieldProperties>({
 	width: 0,
 });
 
+onMounted(() => {
+	setDatePickerFieldValue(textFieldModelValue.value);
+});
+
+function setTextFieldValue(val) {
+	datePickerModelValue.value = val;
+	textFieldModelValue.value = dayjs(dayjs(datePickerModelValue.value)).format(String(format.value));
+}
+
+function setDatePickerFieldValue(val) {
+	textFieldModelValue.value = val;
+	pickerMonth.value = dayjs(val).month();
+	datePickerModelValue.value = dayjs(textFieldModelValue.value, String(format.value)).toDate();
+}
+
 
 // -------------------------------------------------- Watch #
-watch(() => attrs.modelValue, (newVal) => {
-	updateModelValue(newVal);
-});
+// watch(() => attrs.modelValue, (newVal) => {
+// 	updateModelValue(newVal);
+// });
 
 
 // -------------------------------------------------- Computed #
@@ -404,7 +434,7 @@ function toggleDatePicker(trigger?: string | Event): void {
 
 		// If clear, reset the model values //
 		if (trigger === 'clear') {
-			updateModelValues('');
+			updateModelValue('', 'text');
 		}
 
 		return;
@@ -507,34 +537,23 @@ onClickOutside(fieldContainerRef, (event) => {
 
 
 // ------------------------- Update Models //
-function updateModelValue(value: any) {
-	const returnValue = value ?? '';
+function updateModelValue(value: any, component: string) {
+	let returnValue = value ?? '';
 
-	if (returnValue.length < 7) {
-		modelValue.value = returnValue;
-		updateModelValues(returnValue);
-		return;
+	if (component === 'textField') {
+		setDatePickerFieldValue(value);
+	}
+	if (component === 'datePicker') {
+		datePickerModelValue.value = value;
+		setTextFieldValue(value);
 	}
 
-	// if (pickerMode.value === 'hex') {
-	// 	if (value.length > 7) {
-	// 		returnValue = value.substr(0, 7);
-	// 	}
+	returnValue = textFieldModelValue.value;
 
-	// 	if (returnColor.toString().match(/#[a-zA-Z0-9]{7}/)) {
-	// 		returnValue = value.substr(0, 7);
-	// 	}
-	// }
-
-	updateModelValues(returnValue);
+	emitModelValues(returnValue);
 }
 
-function updateModelValues(val: any, updatePicker = true) {
-	if (updatePicker) {
-		datePickerModelValue.value = val;
-	}
-
-	modelValue.value = val;
+function emitModelValues(val: any) {
 	emit('update:modelValue', val);
 	emit('update', val);
 }

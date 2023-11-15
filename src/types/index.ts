@@ -39,8 +39,7 @@ export interface Props {
 	cardPadding?: number | string;
 	cardProps?: VCardProps;
 	color?: VTextField['$props']['color'];
-	datePickerProps?: VDatePicker['$props'] & {
-	};
+	datePickerProps?: VDatePicker['$props'] & {};
 	density?: VTextField['$props']['density'];
 	format?: string | ((date: string) => string);
 	hint?: string;
@@ -58,6 +57,7 @@ export interface Props {
 	readonly?: VTextField['$props']['readonly'];
 	readonlyInput?: boolean | null | undefined;
 	required?: boolean;
+	showAdjacentMonths?: VDatePicker['$props']['showAdjacentMonths'];
 	theme?: VTextField['$props']['theme'];
 
 	// Date Picker Specific //
