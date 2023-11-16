@@ -113,7 +113,7 @@ export interface TextFieldProperties {
 export interface UseGetIcon {
 	(
 		options: {
-			icon: string | null | boolean,
+			icon: VIcon['$props']['icon'] | string | null | boolean,
 			iconOptions: IconOptions | undefined,
 			name: string,
 		}
