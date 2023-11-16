@@ -14,7 +14,8 @@
 		</v-col>
 
 		<v-col cols="12">
-			Vuetify Plugin Template is a template to help you get starting building your own plugin/component for Vuetify.
+			The <code class="ic">VDateField</code> component is a specialized <code class="ic">VTextField</code>
+			for using the <code class="ic">VDatePicker</code> component for use in forms.
 		</v-col>
 	</v-row>
 </template>
