@@ -166,8 +166,6 @@
 
 	<!-- ================================================== Card Picker Container  -->
 	<Teleport to="body">
-		<div class="position-elm-helper"></div>
-
 		<v-defaults-provider :defaults="defaults">
 			<v-card
 				v-bind="defaultCardProps"
@@ -179,11 +177,29 @@
 			>
 				<!-- Date Picker -->
 				<v-date-picker
-					:input-mode="datePickerProps.inputMode"
+					:disabled="readonly || defaults.VDatePicker?.disabled"
+					:header="header"
+					input-mode="calendar"
 					:model-value="datePickerModelValue"
 					:month="pickerMonth"
+					:theme="themeAll"
+					:title="title"
 					@update:model-value="updateModelValue($event, 'datePicker')"
-				></v-date-picker>
+					@update:month="emit('update:month', $event)"
+					@update:viewMode="emit('update:viewMode', $event)"
+					@update:year="emit('update:year', $event)"
+				>
+					<template
+						v-for="(_, slot) in slots"
+						#[slot]="scope"
+					>
+						<slot
+							v-if="slots['actions'] || slots['header'] || slots['title']"
+							:name="slot"
+							v-bind="{ ...scope }"
+						/>
+					</template>
+				</v-date-picker>
 			</v-card>
 		</v-defaults-provider>
 	</Teleport>
@@ -193,6 +209,7 @@
 import {
 	CardStylesObject,
 	HtmlRefElement,
+	InternalValue,
 	Props,
 	TextFieldProperties,
 	VuetifyDefaults,
@@ -205,17 +222,10 @@ import {
 import DatePickerIcon from '@/plugin/components/DatePickerIcon.vue';
 import type { VCard } from 'vuetify/components';
 import { onClickOutside } from '@vueuse/core';
-// import { VDatePicker } from 'vuetify/components';
-// import { useDate } from 'vuetify';
-// import { format as _Format } from 'date-fns';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
-
-console.log('dayjs', dayjs);
-
-// console.log('VDatePicker', VDatePicker);
 
 defineOptions({
 	inheritAttrs: false,
@@ -225,8 +235,10 @@ const attrs = useAttrs();
 const slots = useSlots();
 const emit = defineEmits([
 	'update',
-	'update:mode',
 	'update:modelValue',
+	'update:month',
+	'update:viewMode',
+	'update:year',
 ]);
 
 
@@ -252,7 +264,7 @@ const props = withDefaults(defineProps<Props>(), {
 	open: 'bottom left',
 	persistentHint: false,
 	persistentPlaceholder: false,
-	placeholder: undefined,
+	placeholder: 'Select Date',
 	prependIcon: undefined,
 	prependInnerIcon: 'default',
 	readonly: false,
@@ -264,7 +276,7 @@ const props = withDefaults(defineProps<Props>(), {
 // -------------------------------------------------- Defaults //
 // ------------------------- VCard //
 const defaultCardProps: Props['cardProps'] = {
-	elevation: 5,
+	elevation: props.cardProps.elevation ?? props.elevation ?? 5,
 	hover: false,
 	loading: false,
 	verticalOffset: 28,
@@ -272,48 +284,20 @@ const defaultCardProps: Props['cardProps'] = {
 
 // ------------------------- VDatePicker //
 const defaultDatePickerProps: Props['datePickerProps'] = {
-	active: undefined,											// ! Fail: Not sure what this does or works
-	allowedDates: undefined, 								// Pass
-	bgColor: undefined, 										// Pass
-	border: false, 													// ! Pass/Fail: Only boolean type works from `string | number | boolean`
-	calendarIcon: '$calendar', 							// Pass
-	color: undefined, 											// Pass
-	// ! https://github.com/vuetifyjs/vuetify/issues/18650
-	disabled: false, 												// Pass
-	elevation: 0, 													// * Pass: Keep this value
-	header: '$vuetify.datePicker.header',		// Pass
-	height: undefined, 											// Pass
-	hideHeader: false, 											// Pass
-	hideWeekdays: false, 										// Pass
-	inputMode: 'calendar',									// Pass
-	inputPlaceholder: 'dd/mm/yyyy',					// Pass
-	inputText: '$vuetify.datePicker.input.placeholder', // Pass
-	keyboardIcon: '$vuetify',								// ? Fail: Source Code shows for v3.5
-	// ! https://github.com/vuetifyjs/vuetify/issues/18274
-	landscape: false,												// !! Fail: Not sure what this does or works - Not implemented?
-	location: undefined,										// !! Fail: Not sure what this does or works
-	max: undefined, 												// Pass
-	maxHeight: undefined,										// Pass
-	maxWidth: undefined,										// Pass
-	min: undefined,													// Pass
-	minHeight: undefined,										// Pass
-	minWidth: undefined,										// Pass
-	modeIcon: '$subgroup',									// Pass
-	month: undefined,												// Pass - 0 Index Based
-	multiple: false,												// Pass
-	nextIcon: '$next',											// Pass
-	position: undefined,										// !! Fail: Not sure what this does or works - Not implemented?
-	prevIcon: '$prev',											// Pass
-	rounded: false,													// !! Fail: Not sure what this does or works - Not implemented?
-	showAdjacentMonths: props.showAdjacentMonths ?? false,							// Pass
-	showWeek: false,												// Pass
-	tag: 'div',															// Pass
-	text: undefined,												// !! Fail: Not sure what this does or works
-	theme: undefined,												// Pass
-	title: '$vuetify.datePicker.title',			// Pass
-	viewMode: 'month',											// Pass
-	width: undefined,												// !! Fail: Not sure what this does or works - Will Not Use
-	year: undefined,												// Pass
+	// // active: undefined,								// ! Fail: Not sure what this does or works - Will Not Use
+	// // calendarIcon: '$calendar', 				// ? Pass - Used for 'input' mode - Will Not Use
+	// // keyboardIcon: '$vuetify',					// ? Fail: Source Code shows for v3.5 - Probably will not use if for input mode
+	// ! landscape: https://github.com/vuetifyjs/vuetify/issues/18274
+	landscape: false,												// ! Fail: Not sure what this does or works - Not implemented?
+	// // location: undefined,							// ! Fail: Not sure what this does or works - Will Not Use
+	// ! month https://github.com/vuetifyjs/vuetify/pull/18686
+	month: undefined,												// ! Pass/Fail w/bug
+	// // position: undefined,							// ! Fail: Not sure what this does or works - Not implemented? - Will Not Use
+	rounded: false,													// ! Fail: Not sure what this does or works - Not implemented?
+	text: undefined,												// ! Fail: Not sure what this does or works
+	// // width: undefined,									// ! Fail: Not sure what this does or works - Will Not Use
+	// ! year https://github.com/vuetifyjs/vuetify/pull/18686
+	year: undefined,												// ! Pass/Fail w/bug
 };
 
 const { datePickerProps, format } = toRefs(props);
@@ -326,25 +310,49 @@ const defaults = ref<VuetifyDefaults>({
 	VDatePicker: {
 		...defaultDatePickerProps,
 		...{
-			// showAdjacentMonths: props.showAdjacentMonths,
+			allowedDates: props.allowedDates ?? undefined, 								// * Pass
+			bgColor: props.pickerBgColor ?? undefined, 										// * Pass
+			// border: false, 																						// ! Pass/Fail - Will Not Use
+			color: props.pickerColor ?? undefined, 												// * Pass
+			disabled: false, 																							// * Pass
+			elevation: 0, 																								// * Pass: Keep this value
+			header: props.header ?? 'Select Date',												// * Pass
+			height: props.height ?? undefined, 														// * Pass
+			hideHeader: props.hideHeader ?? false, 												// * Pass
+			hideWeekdays: props.hideWeekdays ?? false,										// * Pass
+			// inputMode: 'calendar',																			// * Pass - Do not include, Keep as calendar
+			// inputPlaceholder: 'dd/mm/yyyy',														// * Pass - Do not include
+			// inputText: '$vuetify.datePicker.input.placeholder', 				// * Pass - Do not include
+			max: props.max ?? undefined, 																	// * Pass
+			maxHeight: props.maxHeight ?? undefined,											// * Pass
+			maxWidth: props.maxWidth ?? undefined,												// * Pass
+			min: props.min ?? undefined,																	// * Pass
+			minHeight: props.minHeight ?? undefined,											// * Pass
+			minWidth: props.minWidth ?? 360,															// * Pass
+			modeIcon: props.modeIcon ?? '$subgroup',											// * Pass
+			multiple: props.multiple ?? false,														// * Pass
+			nextIcon: props.nextIcon ?? '$next',													// * Pass
+			prevIcon: props.prevIcon ?? '$prev',													// * Pass
+			showAdjacentMonths: props.showAdjacentMonths ?? false,				// * Pass
+			showWeek: props.showWeek ?? false,														// * Pass
+			tag: props.pickerTag ?? 'div',																// * Pass
+			// theme: undefined,																					// * Pass - Do not include, Handled by VTextField Prop
+			title: props.title ?? '$vuetify.datePicker.title',						// * Pass
+			viewMode: props.viewMode ?? 'month',													// * Pass
 		},
 		...datePickerProps.value,
 	},
 });
 
-console.log('defaults', defaults);
-
 
 // -------------------------------------------------- Data #
 const cardRef = ref<VCard | null>(null);
 const cardStyles = ref<CardStylesObject>({});
-// const date = useDate();
-const textFieldModelValue = ref<any>(attrs.modelValue);
-const datePickerModelValue = ref<any>(undefined);
+const textFieldModelValue = ref<InternalValue>(attrs.modelValue);
+const datePickerModelValue = ref<InternalValue>(undefined);
 const datePickerOpen = ref<boolean>(false);
 const fieldContainerRef = ref<HtmlRefElement>(null);
-const pickerMonth = ref<number>(0);
-// const modelValue = ref<any>(attrs.modelValue);
+const pickerMonth = ref<Props['month']>(undefined);
 const themeAll = ref(props.theme ?? undefined);
 let textFieldProperties = reactive<TextFieldProperties>({
 	bottom: 0,
@@ -355,19 +363,68 @@ let textFieldProperties = reactive<TextFieldProperties>({
 	width: 0,
 });
 
+const placeholder = ref<Props['placeholder']>(props.placeholder);
+const header = ref<Props['header']>(defaults.value.VDatePicker?.header ?? 'Select Date');
+const title = ref<Props['title']>(defaults.value.VDatePicker?.title ?? 'Select Date');
+
 onMounted(() => {
+	if (props.multiple) {
+		placeholder.value = 'Select Dates';
+		title.value = placeholder.value;
+		header.value = 'Enter Dates';
+
+		if (typeof textFieldModelValue.value === 'string') {
+			const dateArray: any[] = textFieldModelValue.value.split(',');
+
+			dateArray.forEach((d: string, index: number) => {
+				dateArray[index] = new Date(d);
+			});
+
+			textFieldModelValue.value = dateArray;
+		}
+
+		setTextFieldValue(textFieldModelValue.value);
+		emitModelValues(formatMultipleValue());
+		return;
+	}
+
 	setDatePickerFieldValue(textFieldModelValue.value);
 });
 
-function setTextFieldValue(val) {
+function setTextFieldValue(val: InternalValue): void {
 	datePickerModelValue.value = val;
-	textFieldModelValue.value = dayjs(dayjs(datePickerModelValue.value)).format(String(format.value));
+
+	if (props.multiple) {
+		const selectedLength = Array.isArray(val) ? val.length : 0;
+
+		if (!val || typeof val === 'undefined' || selectedLength === 0) {
+			textFieldModelValue.value = undefined;
+			return;
+		}
+
+		textFieldModelValue.value = `${selectedLength} selected`;
+
+		if (selectedLength === 1) {
+			textFieldModelValue.value = dayjs(dayjs(String(val))).format(String(format.value));
+		}
+		return;
+	}
+
+	textFieldModelValue.value = dayjs(dayjs(String(datePickerModelValue.value))).format(String(format.value));
 }
 
-function setDatePickerFieldValue(val) {
+function setDatePickerFieldValue(val: InternalValue): void {
 	textFieldModelValue.value = val;
-	pickerMonth.value = dayjs(val).month();
-	datePickerModelValue.value = dayjs(textFieldModelValue.value, String(format.value)).toDate();
+
+	if (props.multiple && !val) {
+		datePickerModelValue.value = undefined;
+		return;
+	}
+
+	// TODO: Check this after bug fixed: https://github.com/vuetifyjs/vuetify/pull/18686
+	pickerMonth.value = dayjs(String(val)).month() ?? props.month;
+
+	datePickerModelValue.value = dayjs(String(textFieldModelValue.value), String(format.value)).toDate();
 }
 
 
@@ -387,7 +444,7 @@ const textFieldClasses = computed(() => useTextFieldClasses({
 }));
 
 const textFieldReadonly = computed(() => {
-	return props.readonly || props.readonlyInput;
+	return props.readonly || props.readonlyInput || props.multiple;
 });
 
 const hoverIconColor = computed<string | undefined>(() => {
@@ -434,7 +491,7 @@ function toggleDatePicker(trigger?: string | Event): void {
 
 		// If clear, reset the model values //
 		if (trigger === 'clear') {
-			updateModelValue('', 'text');
+			updateModelValue('', 'clear');
 		}
 
 		return;
@@ -536,9 +593,25 @@ onClickOutside(fieldContainerRef, (event) => {
 }, { ignore: [cardRef] });
 
 
+// ------------------------- Format Multiple Value //
+function formatMultipleValue(): InternalValue {
+	const selectedLength = Array.isArray(datePickerModelValue.value) ? datePickerModelValue.value.length : 0;
+	let returnValue: any | any[] = [];
+
+	if (selectedLength > 0) {
+		returnValue = [...datePickerModelValue.value as string[]];
+
+		returnValue.forEach((d: string, index: number) => {
+			returnValue[index] = dayjs(d).format(String(format.value));
+		});
+	}
+
+	return returnValue;
+}
+
 // ------------------------- Update Models //
-function updateModelValue(value: any, component: string) {
-	let returnValue = value ?? '';
+function updateModelValue(value: any, component: string): void {
+	let returnValue: any | any[] = value ?? '';
 
 	if (component === 'textField') {
 		setDatePickerFieldValue(value);
@@ -547,13 +620,21 @@ function updateModelValue(value: any, component: string) {
 		datePickerModelValue.value = value;
 		setTextFieldValue(value);
 	}
+	if (component === 'clear') {
+		datePickerModelValue.value = [];
+		setTextFieldValue(undefined);
+	}
 
 	returnValue = textFieldModelValue.value;
+
+	if (props.multiple) {
+		returnValue = formatMultipleValue();
+	}
 
 	emitModelValues(returnValue);
 }
 
-function emitModelValues(val: any) {
+function emitModelValues(val: InternalValue): void {
 	emit('update:modelValue', val);
 	emit('update', val);
 }
@@ -561,15 +642,4 @@ function emitModelValues(val: any) {
 </script>
 
 <style lang="scss" scoped>
-.position-elm-helper {
-	background-color: #f00;
-	border-radius: 50%;
-	display: none;
-	height: 10px;
-	left: 0;
-	position: absolute;
-	top: 0;
-	width: 10px;
-	z-index: 99999999999;
-}
 </style>
