@@ -10,9 +10,10 @@
 		</v-col>
 
 		<v-col class="mb-4">
-			<h1 class="v-heading text-h3 text-sm-h3 mb-4">
-				Vuetify Plugin Template
+			<h1 class="v-heading text-h3 text-sm-h3 mb-1">
+				Vuetify Date Field
 			</h1>
+			<p class="mb-4 text-grey-darken-1">by WebDevNerdStuff</p>
 			<v-chip
 				color="primary"
 				size="small"
@@ -70,14 +71,11 @@
 	<!-- Description -->
 	<DescriptionSection />
 
-	<!-- Description -->
-	<FeaturesSection />
-
 	<!-- Usage -->
 	<UsageSection :codeBlockOptions="codeBlockOptions" />
 
 	<!-- Example -->
-	<ExampleSection />
+	<ExampleSection :codeBlockOptions="codeBlockOptions" />
 
 	<!-- Components -->
 	<!-- <ComponentsSection :codeBlockOptions="codeBlockOptions" /> -->
@@ -113,7 +111,6 @@ import {
 	DescriptionSection,
 	EventsSection,
 	ExampleSection,
-	FeaturesSection,
 	LegalSection,
 	LicenseSection,
 	PlaygroundSection,
@@ -158,6 +155,7 @@ provide('classes', classes);
 
 <style lang="scss">
 .v-theme--light {
+	pre,
 	code {
 		&.ic {
 			background-color: rgba(0, 0, 0, 0.1) !important;

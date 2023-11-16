@@ -22,6 +22,8 @@ export interface KeyStringAny<T = any> {
 
 export type HtmlRefElement = HTMLDivElement | null | undefined;
 
+export type InternalValue = VDatePicker['$props']['modelValue'];
+
 
 // -------------------------------------------------- Props //
 export interface VCardProps extends Omit<VCard['$props'],
@@ -39,9 +41,9 @@ export interface Props {
 	cardPadding?: number | string;
 	cardProps?: VCardProps;
 	color?: VTextField['$props']['color'];
-	datePickerProps?: VDatePicker['$props'] & {
-	};
+	datePickerProps?: VDatePicker['$props'] & {};
 	density?: VTextField['$props']['density'];
+	elevation?: VCard['$props']['elevation'];
 	format?: string | ((date: string) => string);
 	hint?: string;
 	iconHoverColor?: VIcon['$props']['color'] | boolean;
@@ -61,6 +63,30 @@ export interface Props {
 	theme?: VTextField['$props']['theme'];
 
 	// Date Picker Specific //
+	active?: VDatePicker['$props']['active'];
+	allowedDates?: VDatePicker['$props']['allowedDates'];
+	header?: VDatePicker['$props']['header'];
+	height?: VDatePicker['$props']['height'];
+	hideHeader?: VDatePicker['$props']['hideHeader'];
+	hideWeekdays?: VDatePicker['$props']['hideWeekdays'];
+	max?: VDatePicker['$props']['max'];
+	maxHeight?: VDatePicker['$props']['maxHeight'];
+	maxWidth?: VDatePicker['$props']['maxWidth'];
+	min?: VDatePicker['$props']['min'];
+	minHeight?: VDatePicker['$props']['minHeight'];
+	minWidth?: VDatePicker['$props']['minWidth'];
+	modeIcon?: VDatePicker['$props']['modeIcon'];
+	month?: VDatePicker['$props']['month'];
+	multiple?: VDatePicker['$props']['multiple'];
+	nextIcon?: VDatePicker['$props']['nextIcon'];
+	pickerBgColor?: VDatePicker['$props']['bgColor'];
+	pickerColor?: VDatePicker['$props']['color'];
+	pickerTag?: VDatePicker['$props']['tag'];
+	prevIcon?: VDatePicker['$props']['prevIcon'];
+	showAdjacentMonths?: VDatePicker['$props']['showAdjacentMonths'];
+	showWeek?: VDatePicker['$props']['showWeek'];
+	title?: VDatePicker['$props']['title'];
+	viewMode?: VDatePicker['$props']['viewMode'];
 }
 
 export interface DatePickerIconProps {

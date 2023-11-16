@@ -1,13 +1,13 @@
 <template>
 	<v-row>
 		<v-col
-			id="example"
+			id="examples"
 			cols="12"
 		>
 			<h2 :class="classes.h2">
 				<a
 					:class="classes.headerA"
-					href="#example"
+					href="#examples"
 				>#</a>
 				Example
 			</h2>

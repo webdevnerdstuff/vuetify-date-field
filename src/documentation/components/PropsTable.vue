@@ -48,15 +48,21 @@
 									class="text-primary"
 									:class="classes.appLink"
 									:href="`#props-${sectionId ? `${sectionId}-${item.name}` : item.name}`"
-								>{{ item.name }}</a>
+								>{{ item.name }} <v-icon
+										v-if="item.pickerProp"
+										class=""
+										color="primary"
+										icon="mdi:mdi-calendar-month-outline"
+									/></a>
 							</span>
 						</td>
 					</template>
 
 					<template #[`item.type`]="{ item }">
-						<td class="text-success">
-							{{ item.type }}
-						</td>
+						<td
+							class="text-success"
+							v-html="item.type"
+						></td>
 					</template>
 
 					<template #[`item.default`]="{ item }">
@@ -108,4 +114,8 @@ const search = ref('');
 </script>
 
 <style lang="scss" scoped>
+td {
+	padding-bottom: 10px !important;
+	padding-top: 10px !important;
+}
 </style>

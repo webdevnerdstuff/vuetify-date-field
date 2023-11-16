@@ -24,7 +24,7 @@
 			<v-icon icon="mdi:mdi-home"></v-icon>
 		</v-app-bar-nav-icon>
 
-		<div class="site-title">Vuetify Plugin Template</div>
+		<div class="site-title">Vuetify Date Field</div>
 
 		<v-spacer></v-spacer>
 
