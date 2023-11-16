@@ -15,22 +15,24 @@
 			<v-row>
 				<v-col cols="12">
 					<CodeBlock
-						:code="usageAll"
+						:code="usageGlobal"
 						:highlightjs="codeBlockSettings.plugin === 'highlightjs'"
-						label="Load all components"
+						label="Global registration"
 						lang="javascript"
 						:prismjs="codeBlockSettings.plugin === 'prismjs'"
 						:theme="codeBlockSettings.theme"
 					>
 					</CodeBlock>
 				</v-col>
+			</v-row>
 
+			<v-row>
 				<v-col cols="12">
 					<CodeBlock
 						:code="usageIndividual"
 						:highlightjs="codeBlockSettings.plugin === 'highlightjs'"
-						label="Load individual components"
-						lang="javascript"
+						label="Local registration"
+						lang="html"
 						:prismjs="codeBlockSettings.plugin === 'prismjs'"
 						:theme="codeBlockSettings.theme"
 					>
@@ -42,7 +44,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import dayJs from 'dayjs';
 
 
 const props = defineProps({
@@ -54,28 +56,26 @@ const props = defineProps({
 
 const codeBlockSettings = computed(() => props.codeBlockOptions);
 const classes = inject('classes');
+const format = 'YYYY/MM/DD';
+const today = dayJs(new Date()).format(format);
 
-const usageAll = `import { createApp } from 'vue';
+const usageGlobal = `import { createApp } from 'vue';
 import App from './App.vue';
-import * as MyComponents from './index';
+import { VDateField } from '@wdns/vuetify-date-field';
 
 const app = createApp(App);
 
-for (const prop in MyComponents) {
-  app.component(prop, MyComponents[prop]);
-}
+app.component('VDateField', VDateField);
 
 app.mount('#app');`;
 
-const usageIndividual = `import { createApp } from 'vue';
-import App from './App.vue';
-import {
-  VDateField
-} from '@wdns/vuetify-date-field';
+const usageIndividual = `<template>
+  <VDateField v-model="dateModel" format="${format}" />
+</template>
 
-const app = createApp(App);
+\<script setup\>
+  import { VDateField } from '@wdns/vuetify-date-field';
 
-app.component('VPluginTemplate', VPluginTemplate);
-
-app.mount('#app');`;
+  const dateModel = ref('${today}');
+\</script\>`;
 </script>
