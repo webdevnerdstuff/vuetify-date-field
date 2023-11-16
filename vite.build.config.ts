@@ -17,21 +17,23 @@ const banner = `/**
  * @version ${pkg.version}
  * @description ${pkg.description}
  * @author ${pkg.author}
- * @copyright Copyright ${new Date().getFullYear()}, __USERNAME__
+ * @copyright Copyright ${new Date().getFullYear()}, WebDevNerdStuff
  * @homepage ${pkg.homepage}
  * @repository ${pkg.repository}
  * @license ${pkg.license} License
  */
 `;
 
+const pkgName = 'vuetify-date-field';
+
 export default defineConfig({
 	publicDir: false,
 	build: {
 		lib: {
 			entry: './src/plugin/index.ts',
-			name: pkg.name,
+			name: pkgName,
 			formats: ['es', 'cjs'],
-			fileName: format => `${pkg.name}.${format}.js`,
+			fileName: format => `${pkgName}.${format}.js`,
 		},
 		rollupOptions: {
 			input: {
@@ -69,6 +71,7 @@ export default defineConfig({
 		}),
 		vuetify({
 			autoImport: true,
+			styles: 'none',
 		}),
 		cssInjectedByJsPlugin({ topExecutionPriority: false }),
 		viteStaticCopy({
