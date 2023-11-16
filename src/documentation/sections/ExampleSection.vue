@@ -12,14 +12,16 @@
 				Example
 			</h2>
 		</v-col>
-
-		<PlaygroundPage />
+	</v-row>
+	<v-row>
+		<v-col cols="12">
+			Examples coming soon...
+		</v-col>
 	</v-row>
 </template>
 
 <script setup>
 import { inject } from 'vue';
-import PlaygroundPage from '@/playground/configs/templates/PlaygroundPage.vue';
 
 
 const classes = inject('classes');
