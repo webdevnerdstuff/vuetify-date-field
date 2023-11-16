@@ -1,7 +1,7 @@
 {
 	"name": "@wdns/vuetify-date-field",
-	"version": "1.0.0-alpha-1",
-	"description": "TBD",
+	"version": "1.0.0-alpha.1",
+	"description": "Vuetify Date Field is a Vuetify VTextField Date Picker Component",
 	"private": false,
 	"publishConfig": {
 		"access": "public"
@@ -27,7 +27,16 @@
 		]
 	},
 	"author": "WebDevNerdStuff & Bunnies... lots and lots of bunnies! <webdevnerdstuff@gmail.com> (https://webdevnerdstuff.com)",
-	"funding": [],
+	"funding": [
+		{
+			"type": "paypal",
+			"url": "https://paypal.me/webdevnerdstuff"
+		},
+		{
+			"type": "patreon",
+			"url": "https://www.patreon.com/WebDevNerdStuff"
+		}
+	],
 	"license": "MIT",
 	"files": [
 		"dist/*",
