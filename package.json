@@ -63,7 +63,7 @@
 	"dependencies": {
 		"@vueuse/core": "^10.6.1",
 		"vue": "^3.3.8",
-		"vuetify": "^3.4.1"
+		"vuetify": "^3.4.2"
 	},
 	"devDependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.4.2",
