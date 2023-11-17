@@ -4,7 +4,10 @@
 		:id="`${getHrefId}`"
 		class="v-col-12 offset-lg-2 offset-xl-1 v-col-sm-12 v-col-lg-8 v-col-xl-10 mb-0 pb-0"
 	>
-		<h3 class="text-info mb-1"><a :href="`#${getHrefId}`">{{ code.name }}</a></h3>
+		<h3 class="text-info mb-1"><a
+				class="text-info"
+				:href="`#${getHrefId}`"
+			>{{ code.name }}</a></h3>
 	</v-col>
 
 	<v-col
@@ -134,7 +137,7 @@ function showCodeBlocks() {
 const getHrefId = computed(() => {
 	const id = props.code.name?.toLowerCase().replace(/\s+/g, '-');
 
-	return `example-${id}`;
+	return `examples-${id}`;
 })
 
 </script>
