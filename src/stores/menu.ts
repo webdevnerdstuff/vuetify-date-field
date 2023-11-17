@@ -79,6 +79,53 @@ export const useMenuStore = defineStore('menu', () => {
 		{
 			href: '#examples',
 			icon: 'mdi:mdi-code-json',
+			items: [
+				{
+					href: '#examples',
+					icon: 'mdi:mdi-code-json',
+					title: 'Basic',
+				},
+				{
+					href: '#examples-multiple-prop',
+					icon: 'mdi:mdi-code-json',
+					title: 'Multiple Prop',
+				},
+				{
+					href: '#examples-format-prop',
+					icon: 'mdi:mdi-code-json',
+					title: 'Format Prop',
+				},
+				{
+					href: '#examples-show-sibling-months',
+					icon: 'mdi:mdi-code-json',
+					title: 'Show Sibling months',
+				},
+				{
+					href: '#examples-icon-hover-color-prop',
+					icon: 'mdi:mdi-code-json',
+					title: 'Icon Hover Color Prop',
+				},
+				{
+					href: '#examples-readonly-input-prop',
+					icon: 'mdi:mdi-code-json',
+					title: 'Readonly Input Prop',
+				},
+				{
+					href: '#examples-readonly-prop',
+					icon: 'mdi:mdi-code-json',
+					title: 'Readonly Prop',
+				},
+				{
+					href: '#examples-icon-props',
+					icon: 'mdi:mdi-code-json',
+					title: 'Icon Props',
+				},
+				{
+					href: '#examples-card-offset-props',
+					icon: 'mdi:mdi-code-json',
+					title: 'Card Offset Props',
+				},
+			],
 			title: 'Examples',
 		},
 		{
