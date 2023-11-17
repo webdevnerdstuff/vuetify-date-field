@@ -35,6 +35,12 @@
 				VueUse
 			</a>
 		</v-col>
+		<v-col cols="12">
+			The <code class="ic">VDateField</code> component uses the <a
+				:href="store.links.dayJs"
+				target="_blank"
+			>Day.js</a> library for date manipulation.
+		</v-col>
 	</v-row>
 </template>
 

@@ -65,39 +65,14 @@
 				</v-col>
 			</v-row>
 		</v-col>
-
-		<v-col cols="12">
-			<CodeBlock
-				class="mb-6"
-				:code="exampleCode"
-				:highlightjs="codeBlockSettings.plugin === 'highlightjs'"
-				label=""
-				lang="html"
-				:prismjs="codeBlockSettings.plugin === 'prismjs'"
-				:theme="codeBlockSettings.theme"
-			>
-				<template #label>
-					<code class="ic">@update</code> Event Example
-				</template>
-			</CodeBlock>
-		</v-col>
 	</v-row>
 </template>
 
 
 <script setup>
-import { computed, inject, ref } from 'vue';
 import { useCoreStore } from '@/stores/index';
 
 
-const props = defineProps({
-	codeBlockOptions: {
-		required: true,
-		type: Object,
-	},
-});
-
-const codeBlockSettings = computed(() => props.codeBlockOptions);
 const classes = inject('classes');
 const store = useCoreStore();
 
@@ -120,26 +95,26 @@ const headers = [
 ];
 const items = [
 	{
-		desc: 'Emitted when the component has been updated',
+		desc: 'Event that is emitted when the component\'s model changes.',
 		name: 'update',
 	},
+	{
+		desc: 'Event that is emitted when the component\'s model changes.',
+		name: 'update:modelValue',
+	},
+	{
+		desc: 'Event that is emitted when the component\'s month changes.',
+		name: 'update:month',
+	},
+	{
+		desc: 'Event that is emitted when the component\'s view mode changes.',
+		name: 'update:viewMode',
+	},
+	{
+		desc: 'Event that is emitted when the component\'s year changes.',
+		name: 'update:year',
+	},
 ];
+
 const search = ref('');
-
-const exampleCode = `<template>
-  <VPluginTemplate
-    v-model="componentValue"
-    @update="updatedValue"
-  />
-<\/template>
-
-<script setup>
-import { ref } from 'vue';
-
-const componentValue = ref(true);
-
-function updatedValue(value, field) {
-  // ...do something awesome
-}
-<\/script>`;
 </script>

@@ -224,12 +224,11 @@ import type { VCard } from 'vuetify/components';
 import { onClickOutside } from '@vueuse/core';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 
+
+dayjs.extend(advancedFormat);
 dayjs.extend(customParseFormat);
-
-defineOptions({
-	inheritAttrs: false,
-});
 
 const attrs = useAttrs();
 const slots = useSlots();
@@ -254,7 +253,7 @@ const props = withDefaults(defineProps<Props>(), {
 	color: undefined,
 	datePickerProps: () => ({}) as const,
 	density: 'default',
-	format: 'dd/mm/yyyy',
+	format: 'YYYY-MM-DD',
 	hint: '',
 	iconHoverColor: undefined,
 	iconSize: 'default',
@@ -366,9 +365,12 @@ let textFieldProperties = reactive<TextFieldProperties>({
 const placeholder = ref<Props['placeholder']>(props.placeholder);
 const header = ref<Props['header']>(defaults.value.VDatePicker?.header ?? 'Select Date');
 const title = ref<Props['title']>(defaults.value.VDatePicker?.title ?? 'Select Date');
+const multiple = ref<Props['multiple']>(defaults.value.VDatePicker?.multiple);
 
+
+// -------------------------------------------------- Mounted #
 onMounted(() => {
-	if (props.multiple) {
+	if (multiple.value) {
 		placeholder.value = 'Select Dates';
 		title.value = placeholder.value;
 		header.value = 'Enter Dates';
@@ -388,50 +390,13 @@ onMounted(() => {
 		return;
 	}
 
+	if (textFieldModelValue.value !== null && typeof textFieldModelValue.value !== 'undefined') {
+		textFieldModelValue.value = formatSingleValue(textFieldModelValue.value);
+		emitModelValues(textFieldModelValue.value);
+	}
+
 	setDatePickerFieldValue(textFieldModelValue.value);
 });
-
-function setTextFieldValue(val: InternalValue): void {
-	datePickerModelValue.value = val;
-
-	if (props.multiple) {
-		const selectedLength = Array.isArray(val) ? val.length : 0;
-
-		if (!val || typeof val === 'undefined' || selectedLength === 0) {
-			textFieldModelValue.value = undefined;
-			return;
-		}
-
-		textFieldModelValue.value = `${selectedLength} selected`;
-
-		if (selectedLength === 1) {
-			textFieldModelValue.value = dayjs(dayjs(String(val))).format(String(format.value));
-		}
-		return;
-	}
-
-	textFieldModelValue.value = dayjs(dayjs(String(datePickerModelValue.value))).format(String(format.value));
-}
-
-function setDatePickerFieldValue(val: InternalValue): void {
-	textFieldModelValue.value = val;
-
-	if (props.multiple && !val) {
-		datePickerModelValue.value = undefined;
-		return;
-	}
-
-	// TODO: Check this after bug fixed: https://github.com/vuetifyjs/vuetify/pull/18686
-	pickerMonth.value = dayjs(String(val)).month() ?? props.month;
-
-	datePickerModelValue.value = dayjs(String(textFieldModelValue.value), String(format.value)).toDate();
-}
-
-
-// -------------------------------------------------- Watch #
-// watch(() => attrs.modelValue, (newVal) => {
-// 	updateModelValue(newVal);
-// });
 
 
 // -------------------------------------------------- Computed #
@@ -444,7 +409,7 @@ const textFieldClasses = computed(() => useTextFieldClasses({
 }));
 
 const textFieldReadonly = computed(() => {
-	return props.readonly || props.readonlyInput || props.multiple;
+	return props.readonly || props.readonlyInput || multiple.value;
 });
 
 const hoverIconColor = computed<string | undefined>(() => {
@@ -593,7 +558,11 @@ onClickOutside(fieldContainerRef, (event) => {
 }, { ignore: [cardRef] });
 
 
-// ------------------------- Format Multiple Value //
+// ------------------------- Format Single & Multiple Value //
+function formatSingleValue(val: InternalValue) {
+	return dayjs(String(val)).format(String(format.value));
+}
+
 function formatMultipleValue(): InternalValue {
 	const selectedLength = Array.isArray(datePickerModelValue.value) ? datePickerModelValue.value.length : 0;
 	let returnValue: any | any[] = [];
@@ -602,11 +571,50 @@ function formatMultipleValue(): InternalValue {
 		returnValue = [...datePickerModelValue.value as string[]];
 
 		returnValue.forEach((d: string, index: number) => {
-			returnValue[index] = dayjs(d).format(String(format.value));
+			returnValue[index] = formatSingleValue(d);
 		});
 	}
 
 	return returnValue;
+}
+
+// ------------------------- Set Text Field Value //
+function setTextFieldValue(val: InternalValue): void {
+	datePickerModelValue.value = val;
+
+	if (multiple.value) {
+		const selectedLength = Array.isArray(val) ? val.length : 0;
+
+		if (!val || typeof val === 'undefined' || selectedLength === 0) {
+			textFieldModelValue.value = undefined;
+			return;
+		}
+
+		textFieldModelValue.value = `${selectedLength} selected`;
+
+		if (selectedLength === 1) {
+			textFieldModelValue.value = dayjs(dayjs(String(val))).format(String(format.value));
+		}
+		return;
+	}
+
+	textFieldModelValue.value = formatSingleValue(datePickerModelValue.value);
+	// textFieldModelValue.value = dayjs(dayjs(String(datePickerModelValue.value))).format(String(format.value));
+}
+
+// ------------------------- Set Date Picker Value //
+function setDatePickerFieldValue(val: InternalValue): void {
+	textFieldModelValue.value = val;
+
+	if (multiple.value && !val) {
+		datePickerModelValue.value = undefined;
+		return;
+	}
+
+	// TODO: Check this after bug fixed: https://github.com/vuetifyjs/vuetify/pull/18686
+	pickerMonth.value = dayjs(String(val)).month() ?? props.month;
+
+	datePickerModelValue.value = dayjs(String(textFieldModelValue.value), String(format.value)).toDate();
 }
 
 // ------------------------- Update Models //
@@ -627,7 +635,7 @@ function updateModelValue(value: any, component: string): void {
 
 	returnValue = textFieldModelValue.value;
 
-	if (props.multiple) {
+	if (multiple.value) {
 		returnValue = formatMultipleValue();
 	}
 

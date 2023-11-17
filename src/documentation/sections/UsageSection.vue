@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import dayJs from 'dayjs';
+import dayjs from 'dayjs';
 
 
 const props = defineProps({
@@ -56,8 +56,8 @@ const props = defineProps({
 
 const codeBlockSettings = computed(() => props.codeBlockOptions);
 const classes = inject('classes');
-const format = 'YYYY/MM/DD';
-const today = dayJs(new Date()).format(format);
+const format = 'YYYY-MM-DD';
+const today = dayjs(new Date()).format(format);
 
 const usageGlobal = `import { createApp } from 'vue';
 import App from './App.vue';
