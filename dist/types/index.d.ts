@@ -52,7 +52,7 @@ export interface Props {
     minWidth?: VDatePicker['$props']['minWidth'];
     modeIcon?: VDatePicker['$props']['modeIcon'];
     month?: VDatePicker['$props']['month'];
-    multiple?: VDatePicker['$props']['multiple'];
+    multiple?: VDatePicker['$props']['multiple'] | true;
     nextIcon?: VDatePicker['$props']['nextIcon'];
     pickerBgColor?: VDatePicker['$props']['bgColor'];
     pickerColor?: VDatePicker['$props']['color'];
