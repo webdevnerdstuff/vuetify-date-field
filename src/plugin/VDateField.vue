@@ -224,12 +224,12 @@ import type { VCard } from 'vuetify/components';
 import { onClickOutside } from '@vueuse/core';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 
-dayjs.extend(customParseFormat);
+dayjs
+	.extend(advancedFormat)
+	.extend(customParseFormat);
 
-defineOptions({
-	inheritAttrs: false,
-});
 
 const attrs = useAttrs();
 const slots = useSlots();
@@ -366,11 +366,12 @@ let textFieldProperties = reactive<TextFieldProperties>({
 const placeholder = ref<Props['placeholder']>(props.placeholder);
 const header = ref<Props['header']>(defaults.value.VDatePicker?.header ?? 'Select Date');
 const title = ref<Props['title']>(defaults.value.VDatePicker?.title ?? 'Select Date');
+const multiple = ref<Props['multiple']>(defaults.value.VDatePicker?.multiple);
 
 
 // -------------------------------------------------- Mounted #
 onMounted(() => {
-	if (props.multiple) {
+	if (multiple.value) {
 		placeholder.value = 'Select Dates';
 		title.value = placeholder.value;
 		header.value = 'Enter Dates';
@@ -390,8 +391,10 @@ onMounted(() => {
 		return;
 	}
 
-	textFieldModelValue.value = formatSingleValue(textFieldModelValue.value);
-	emitModelValues(textFieldModelValue.value);
+	if (textFieldModelValue.value !== null && typeof textFieldModelValue.value !== 'undefined') {
+		textFieldModelValue.value = formatSingleValue(textFieldModelValue.value);
+		emitModelValues(textFieldModelValue.value);
+	}
 
 	setDatePickerFieldValue(textFieldModelValue.value);
 });
@@ -407,7 +410,7 @@ const textFieldClasses = computed(() => useTextFieldClasses({
 }));
 
 const textFieldReadonly = computed(() => {
-	return props.readonly || props.readonlyInput || props.multiple;
+	return props.readonly || props.readonlyInput || multiple.value;
 });
 
 const hoverIconColor = computed<string | undefined>(() => {
@@ -580,7 +583,7 @@ function formatMultipleValue(): InternalValue {
 function setTextFieldValue(val: InternalValue): void {
 	datePickerModelValue.value = val;
 
-	if (props.multiple) {
+	if (multiple.value) {
 		const selectedLength = Array.isArray(val) ? val.length : 0;
 
 		if (!val || typeof val === 'undefined' || selectedLength === 0) {
@@ -604,7 +607,7 @@ function setTextFieldValue(val: InternalValue): void {
 function setDatePickerFieldValue(val: InternalValue): void {
 	textFieldModelValue.value = val;
 
-	if (props.multiple && !val) {
+	if (multiple.value && !val) {
 		datePickerModelValue.value = undefined;
 		return;
 	}
@@ -633,7 +636,7 @@ function updateModelValue(value: any, component: string): void {
 
 	returnValue = textFieldModelValue.value;
 
-	if (props.multiple) {
+	if (multiple.value) {
 		returnValue = formatMultipleValue();
 	}
 
