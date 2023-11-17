@@ -10,6 +10,7 @@ export const useCoreStore = defineStore('core', () => {
 	const repoBaseUrl = `https://github.com/webdevnerdstuff/${packageName}`;
 	const links = {
 		changeLog: `${repoBaseUrl}/blob/main/CHANGELOG.md`,
+		dayJs: 'https://day.js.org/',
 		github: repoBaseUrl,
 		githubProfile: 'https://github.com/webdevnerdstuff',
 		license: `${repoBaseUrl}/blob/main/LICENSE.md`,
