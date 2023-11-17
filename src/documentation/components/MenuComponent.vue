@@ -93,6 +93,10 @@ function smoothScroll() {
 	font-size: .9em;
 	padding-left: calc(var(--indent-padding) - 10px) !important;
 
+	:deep(.v-list-item__spacer) {
+		display: none;
+	}
+
 	:deep(.v-icon) {
 		font-size: 1em !important;
 		margin-right: 1em !important;
