@@ -1,6 +1,6 @@
 {
 	"name": "@wdns/vuetify-date-field",
-	"version": "1.0.0-alpha.1",
+	"version": "1.0.0-alpha.2",
 	"description": "Vuetify Date Field is a Vuetify VTextField Date Picker Component",
 	"private": false,
 	"publishConfig": {
