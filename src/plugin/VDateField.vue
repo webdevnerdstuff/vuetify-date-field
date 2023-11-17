@@ -226,10 +226,9 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 
-dayjs
-	.extend(advancedFormat)
-	.extend(customParseFormat);
 
+dayjs.extend(advancedFormat);
+dayjs.extend(customParseFormat);
 
 const attrs = useAttrs();
 const slots = useSlots();
